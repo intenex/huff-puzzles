@@ -13,5 +13,30 @@
 
 
 #define macro MAIN() = takes(0) returns(0) {
+    0x00 calldataload 0xE0 shr
+    __FUNC_SIG(multiply) eq mult jumpi
 
+    0x00 0x00 revert
+
+    mult:
+        0x04 calldataload // load first 32 byte argument past the function selector
+        dup1 // keep a duplicate on the stack for later division
+        dup1 // keep another duplicate for testing if zero
+        iszero returnZero jumpi
+        0x24 calldataload // load second 32 bytes past
+        dup1 // for testing if zero
+        iszero returnZero jumpi
+        mul
+        dup1 // keep the value on the stack after mstore pops them off
+        0x00 mstore // store the result at storage location 0x00 in memory
+        div // divide the multiplication result by a
+        0x24 calldataload
+        eq returnSuccess jumpi
+        0x00 0x00 revert
+
+    returnSuccess:
+        0x20 0x00 return // return 32 bytes starting from memory location 0
+
+    returnZero:
+        0x00 0x00 mstore 0x20 0x00 return
 }
