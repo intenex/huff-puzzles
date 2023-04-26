@@ -14,7 +14,19 @@
  #define function foo() payable returns(uint256)
  #define function bar() payable returns(uint256)
 
-
 #define macro MAIN() = takes(0) returns(0) {
+    0x00 calldataload 0xE0 shr // remove everything but the first 32 bits with the shr 0XE0 is 224 so 32 bits saved, or 4 bytes, aka function selector
+    dup1 // so once popped off the stack the second bar can also be used to compare
+    __FUNC_SIG(foo) eq foo jumpi
+    __FUNC_SIG(bar) eq bar jumpi
 
+    0x00 0x00 revert // else revert with arguments 0 and 0
+
+    foo:
+        0x02 0x00 mstore
+        0x20 0x00 return
+
+    bar:
+        0x03 0x00 mstore
+        0x20 0x00 return
 }

@@ -53,17 +53,7 @@ You should see something like this
 
 ## Suggested order for other exercises
 
-- [CallValue](https://github.com/rareskills/huff-puzzles/blob/main/src/CallValue.huff)
-- [CalldataLength](https://github.com/rareskills/huff-puzzles/blob/main/src/CalldataLength.huff)
-- [MyEtherBalance](https://github.com/rareskills/huff-puzzles/blob/main/src/MyEtherBalance.huff)
-- [Add1](https://github.com/rareskills/huff-puzzles/blob/main/src/Add1.huff)
-- [Multiply](https://github.com/rareskills/huff-puzzles/blob/main/src/Multiply.huff)
-- [NonPayable](https://github.com/rareskills/huff-puzzles/blob/main/src/NonPayable.huff)
-- [FooBar](https://github.com/rareskills/huff-puzzles/blob/main/src/FooBar.huff)
-- [SimpleStore](https://github.com/rareskills/huff-puzzles/blob/main/src/SimpleStore.huff)
-- [RevertCustom](https://github.com/rareskills/huff-puzzles/blob/main/src/RevertCustom.huff)
 - [RevertString](https://github.com/rareskills/huff-puzzles/blob/main/src/RevertString.huff)
-- [SumArray](https://github.com/rareskills/huff-puzzles/blob/main/src/SumArray.huff)
 - [Keccak](https://github.com/rareskills/huff-puzzles/blob/main/src/Keccak.huff)
 - [MaxOfArray](https://github.com/rareskills/huff-puzzles/blob/main/src/MaxOfArray.huff)
 - [Donations](https://github.com/rareskills/huff-puzzles/blob/main/src/Donations.huff)

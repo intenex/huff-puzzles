@@ -12,5 +12,31 @@
 
 
 #define macro MAIN() = takes(0) returns(0) {
+    0x00 calldataload 0xE0 shr
+    __FUNC_SIG(sumArray) eq sumArray jumpi
 
+    0x00 0x00 revert
+
+    sumArray:
+        calldatasize 0x24 0x60 calldatacopy // loads all the arguments besides the function selector into memory, since just one dynamic array as an argument, the first 32 bytes should be a pointer to the next slot where the array data starts, then the next 32 bytes should be the length, then the rest are the actual numbers, so 0x24 should be the length as the first thing loaded and the rest are the actual memory bits. Offset at 0x60 to save 0x00-0x60 for storing the sum, the current memory pointer for the next number, and the current number of numbers left to fetch
+        0x00 0x00 mstore // store the sum here
+        0x80 0x20 mstore // store the current location in memory to load for the next number
+        0x00 // push zero on the stack to do the gt comparison later
+        0x60 mload // the size of all the numbers
+        dup1 0x01 swap1 sub 0x40 mstore // duplicate the size, subtract 1 from it, then store it at 0x40
+        gt addNumber jumpi
+        0x20 0x00 return // if it's just an empty array from the start just return 0
+
+    addNumber:
+        0x00 mload // load the current sum
+        0x20 mload // load the current location in memory to fetch
+        dup1 0x20 add 0x20 mstore // duplicate the current memory pointer, then add 32 to it, then save that to the 0x20 memory pointer location for the next value if any
+        mload // load the value at the current memory location
+        add 0x00 mstore // adds the current value loaded to the current sum and then stores the result at 0x00
+        0x00 // push zero on the stack to do the gt comparison later
+        0x40 mload
+        dup1 0x01 swap1 sub 0x40 mstore // duplicate teh size, subtract 1 from it, then store it at 0x40
+        gt addNumber jumpi // if the size of elements is still greater than 0 then repeat
+        0x20 0x00 return // if the jumpi doesn't execute then return the sum as is
 }
+

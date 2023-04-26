@@ -11,7 +11,19 @@
  *  The task is to write within the `MAIN` macro below, huff code that reverts (all the time) with the string error message `Only Huff`
 */
 
-
 #define macro MAIN() = takes(0) returns(0) {
-    
+    0x08c379a0 0x00 mstore
+    0x20 0x04 mstore
+    0x4f6e6c792048756666 0x20 mstore
+    0x24 0x00 revert
 }
+
+/**
+#define macro MAIN() = takes(0) returns(0) {
+    0x08c379a000000000000000000000000000000000000000000000000000000000000000 0x00 mstore // function signature for the error message plus 32 bytes of padding offset
+    0x04 0x20 mstore // string offset
+    0x09 0x24 mstore // length of the revert string
+    0x4f6e6c792048756666 0x04 mstore
+    0x64 0x00 revert
+}
+*/
