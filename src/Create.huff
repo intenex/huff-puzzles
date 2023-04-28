@@ -1,4 +1,5 @@
- 
+  #include "./Console.huff"
+
 /** 
  *  CREATE HUFF EXERCISE
  *  
@@ -13,5 +14,14 @@
 
 
  #define macro MAIN() = takes(0) returns(0) {
-    
+    0x00 calldataload 0xE0 shr
+    __FUNC_SIG(makeContract) eq makeContract jumpi
+
+    0x00 0x00 revert
+
+    makeContract:
+        0x600c80600b6000396000f3620caffe60005260206000F3 // init code: 600a80600b6000396000f3 // code to return 0xcaffe: 620caffe60005260206000F3
+        0x00 mstore
+        0x20 0x00 0x00 create
+        0x00 0x00 return
  }

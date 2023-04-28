@@ -1,3 +1,5 @@
+#include "./Console.huff"
+ 
  /** 
  *  EMITTER HUFF EXERCISE
  *  
@@ -13,5 +15,15 @@
 
 
  #define macro MAIN() = takes(0) returns(0) {
-    
+    0x00 calldataload 0xE0 shr
+    __FUNC_SIG(value) eq valueFunc jumpi
+
+    0x00 0x00 revert
+
+    valueFunc:
+        0x04 calldataload // load the first value to the stack
+        0x20 0x24 0x00 calldatacopy // load the second value into memory since this isn't indexed
+        0xd0df8930e73a69258b2c5f54b88f056f4a3594e30a976d7e9d02f45cb0c8d72f // event signature for Value(uint256,uint256)
+        0x20 0x00 log2
+        0x00 0x00 return
  }
