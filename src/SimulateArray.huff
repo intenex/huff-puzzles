@@ -1,3 +1,4 @@
+#include "./Console.huff"
 
 /** 
  *  SIMULATE_ARRAY HUFF EXERCISE
@@ -25,5 +26,66 @@
  #define error ZeroArray()
 
  #define macro MAIN() = takes(0) returns(0) {
-    
+    0x00 calldataload 0xE0 shr
+    dup1 dup1 dup1 dup1 // get 5 copies for all the function signatures
+    __FUNC_SIG(pushh) eq pushh jumpi
+    __FUNC_SIG(popp) eq popp jumpi
+    __FUNC_SIG(read) eq read jumpi
+    __FUNC_SIG(length) eq length jumpi
+    __FUNC_SIG(write) eq write jumpi
+
+    0x00 0x00 revert
+
+    pushh:
+        0x04 calldataload // load the number to add
+        0x00 sload // load the length of the array
+        0x01 add // add 1 to the length of the array to get the next storage slot to save in
+        dup1 0x00 sstore // duplicate the new length, and store it at the 0 storage slot
+        sstore // store the value at the new length of the array bit
+        0x00 0x00 return
+
+    popp:
+        0x00 // save 0 here to use later in sstore to overwrite the value currently stored as the last value in the array
+        0x00 sload // load the length of the array
+        dup1 0x00 eq throwError jumpi // duplicate the length, check if it's zero, and throw an error if so
+        dup1 0x01 swap1 sub 0x00 sstore // duplicate the length, subtract 1 from it, store it back to the the first storage slot
+        sstore // should store 0 at the last index of the array
+        0x00 0x00 return
+
+    read:
+        0x00 sload // get the length of the array
+        0x04 calldataload // make sure this is always less than the length for it to be a valid index
+        dup1 swap2 gt actuallyRead jumpi // duplicate the callvalue, then swap it with the length of the array, then do a gt check to ensure the length is greater than the index otherwise revert with error
+        __ERROR(OutOfBounds) 0x00 mstore
+        0x04 0x00 revert
+
+    actuallyRead:
+        // now the stack should have the current index to read, add 1 to it to get the actual value to return
+        0x01 add sload 0x00 mstore 0x20 0x00 return // load the value, store it to memory, return it
+
+    length:
+        0x00 sload 0x00 mstore 0x20 0x00 return // load the length, store it to memory, then return it from memory
+
+    write:
+        0x00 sload // get the length of the array
+        0x04 calldataload // make sure this is always less than the length for it to be a valid index
+        dup1 swap2 gt actuallyWrite jumpi // duplicate the callvalue, then swap it with the length of the array, then do a gt check to ensure the length is greater than the index otherwise revert with error
+        __ERROR(OutOfBounds) 0x00 mstore
+        0x04 0x00 revert
+
+    actuallyWrite:
+        0x01 add 0x24 calldataload swap1 sstore // add 1 to the index to get the right storage slot to write to, then load the value to write, then swap to get arguments in order, then write
+        0x00 0x00 return
+
+    throwError:
+        __ERROR(ZeroArray) 0x00 mstore
+        0x04 0x00 revert
  }
+
+ /**
+ skip the keccak256 stuff, unnecessary to pass this
+
+ Strategy - store length at storage slot 0
+ Then start storing each actual item from storage slot 1
+ And then to fetch the correct value for each, add 1 to the length of the array and fetch from that storage slot
+ */

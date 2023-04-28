@@ -50,28 +50,23 @@ contract SimulateArrayTest is Test, NonMatchingSelectorHelper {
             0,
             "length is initially meant to be 0"
         );
-
         simulateArray.pushh(42);
         assertEq(simulateArray.length(), 1, "expected length to be 1");
         assertEq(simulateArray.read(0), 42, "expected arr[0] to be 42");
-
         simulateArray.pushh(24);
         assertEq(simulateArray.length(), 2, "expected length to be 2");
         assertEq(simulateArray.read(0), 42, "expected arr[0] to be 42");
         assertEq(simulateArray.read(1), 24, "expected arr[1] to be 24");
-
         simulateArray.write(0, 122);
         assertEq(simulateArray.length(), 2, "expected length to be 2");
         assertEq(simulateArray.read(0), 122, "expected arr[0] to be 122");
         assertEq(simulateArray.read(1), 24, "expected arr[1] to be 24");
-
         simulateArray.write(1, 346);
         assertEq(simulateArray.length(), 2, "expected length to be 2");
         assertEq(simulateArray.read(0), 122, "expected arr[0] to be 122");
         assertEq(simulateArray.read(1), 346, "expected arr[1] to be 346");
-
         simulateArray.popp();
-        assertEq(simulateArray.length(), 2, "expected length to be 2");
+        assertEq(simulateArray.length(), 1, "expected length to be 1"); // NOTE (modified this from 2 since pretty sure it should be 1)
         assertEq(simulateArray.read(0), 122, "expected arr[0] to be 122");
         vm.expectRevert(bytes4(keccak256("OutOfBounds()")));
         simulateArray.read(1);

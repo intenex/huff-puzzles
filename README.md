@@ -54,8 +54,6 @@ You should see something like this
 ## Suggested order for other exercises
 
 - [RevertString](https://github.com/rareskills/huff-puzzles/blob/main/src/RevertString.huff)
-- [SimulateArray](https://github.com/rareskills/huff-puzzles/blob/main/src/SimulateArray.huff)
-- [Emitter](https://github.com/rareskills/huff-puzzles/blob/main/src/Emitter.huff)
 - [Create](https://github.com/rareskills/huff-puzzles/blob/main/src/Create.huff)
 
 ## More resources
