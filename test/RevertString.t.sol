@@ -4,11 +4,13 @@ pragma solidity ^0.8.13;
 import "forge-std/Test.sol";
 import {HuffConfig} from "foundry-huff/HuffConfig.sol";
 import {HuffDeployer} from "foundry-huff/HuffDeployer.sol";
+import {console} from "forge-std/console.sol";
 
 interface RevertString {}
 
 contract RevertStringTest is Test {
     RevertString public revertString;
+    event LogCalldata(bytes);
 
     function setUp() public {
         revertString = RevertString(
@@ -20,10 +22,11 @@ contract RevertStringTest is Test {
         (bool success, bytes memory revertData) = address(revertString).call(
             ""
         );
+        emit LogCalldata(revertData);
         require(!success, "call expected to fail");
         assertEq(
             keccak256(bytes("Only Huff")),
-            keccak256(abi.decode(revertData, (bytes))),
+            keccak256(abi.decode(revertData, (bytes))), // this doesn't work and has an EvmError: Revert that I can't get around
             "Expected the call to revert with custom error 'Only Huff' but it didn't "
         );
     }

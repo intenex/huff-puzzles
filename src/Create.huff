@@ -1,4 +1,4 @@
-  #include "./Console.huff"
+#include "./Console.huff"
 
 /** 
  *  CREATE HUFF EXERCISE
@@ -20,8 +20,8 @@
     0x00 0x00 revert
 
     makeContract:
-        0x600c80600b6000396000f3620caffe60005260206000F3 // init code: 600a80600b6000396000f3 // code to return 0xcaffe: 620caffe60005260206000F3
+        0x600c80600b6000396000f3620caffe60005260206000F3000000000000000000 // init code: 600c80600b6000396000f3 // code to return 0xcaffe: 620caffe60005260206000F3
         0x00 mstore
-        0x20 0x00 0x00 create
-        0x00 0x00 return
+        0x0b 0x00 0x00 create // for some reason this is creating but then reverting
+        0x20 0x00 return
  }

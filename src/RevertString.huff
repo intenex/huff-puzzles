@@ -1,3 +1,4 @@
+#include "./Console.huff"
 
 /**
  *  REVERT_STRING HUFF EXERCISE
@@ -12,10 +13,8 @@
 */
 
 #define macro MAIN() = takes(0) returns(0) {
-    0x08c379a0 0x00 mstore
-    0x20 0x04 mstore
-    0x4f6e6c792048756666 0x20 mstore
-    0x24 0x00 revert
+    0x4f6e6c792048756666 0x00 mstore
+    0x09 0x17 revert
 }
 
 /**
