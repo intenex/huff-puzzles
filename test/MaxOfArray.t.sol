@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import {HuffConfig} from "foundry-huff/HuffConfig.sol";
 import {HuffDeployer} from "foundry-huff/HuffDeployer.sol";
 import {NonMatchingSelectorHelper} from "./test-utils/NonMatchingSelectorHelper.sol";
+import {console} from "forge-std/console.sol";
 
 interface MaxOfArray {
     function maxOfArray(
@@ -14,6 +15,7 @@ interface MaxOfArray {
 
 contract MaxOfArrayTest is Test, NonMatchingSelectorHelper {
     MaxOfArray public maxOfArray;
+    event LogCalldata(bytes);
 
     function setUp() public {
         maxOfArray = MaxOfArray(HuffDeployer.config().deploy("MaxOfArray"));
@@ -31,6 +33,12 @@ contract MaxOfArrayTest is Test, NonMatchingSelectorHelper {
         arr[7] = 17;
         arr[8] = 67251781;
         arr[9] = 27;
+
+        bytes memory data = abi.encodeWithSignature(
+            "maxOfArray(uint256[])",
+            arr
+        );
+        // emit LogCalldata(data);
 
         uint256 x = maxOfArray.maxOfArray(arr);
         assertEq(x, 67251781, "expected max of arr to be 67251781");

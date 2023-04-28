@@ -8,5 +8,23 @@
 #define function donated(address) payable returns(uint256)
 
 #define macro MAIN() = takes(0) returns(0) {
+    0x00 calldataload 0xE0 shr // get the function selector
+    __FUNC_SIG(donated) eq donated jumpi
+    0x00 callvalue gt donate jumpi
+    0x20 0x00 return
+
+    donated:
+        0x04 calldataload // this should load the address into the stack
+        0x00 mstore // store the address in memory now
+        0x20 0x00 sha3 // get the address hash
+        sload 0x00 mstore // load the value at that address hash and store it in memory
+        0x20 0x00 return
     
+    donate:
+        caller 0x00 mstore // store the address so we can hash it later for the storage location to store the counter at
+        0x20 0x00 sha3 // address hash that we can sstore on
+        dup1 sload // retrieves the existing value if any, returns 0 if nothing testNonMatchingSelector
+        callvalue add // add the existing value to the new value
+        swap1 sstore // store the new value at the key of the address hash, swap1 to get the arguments in order
+        0x00 0x00 return
 }

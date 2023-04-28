@@ -1,6 +1,6 @@
 
 /** 
- *  SUM_ARRAY HUFF EXERCISE
+ *  SIMULATE_ARRAY HUFF EXERCISE
  *
  * In this puzzle, the task is to simulate an array in Huff using the "exact" storage pattern as solidity. Expected functions can; 
  *      - Push numbers onto a array, 

@@ -1,4 +1,5 @@
- 
+ #include "./Console.huff"
+
 /** 
  *  DISTRIBUTE HUFF EXERCISE
  *  
@@ -14,5 +15,34 @@
 
 
  #define macro MAIN() = takes(0) returns(0) {
-   
+    0x00 calldataload 0xE0 shr // get the function selector
+    __FUNC_SIG(distribute) eq distribute jumpi
+
+    0x00 0x00 revert
+
+    distribute:
+        calldatasize 0x24 0x60 calldatacopy // loads all the arguments besides the function selector into memory, since just one dynamic array as an argument, the first 32 bytes should be a pointer to the next slot where the array data starts, then the next 32 bytes should be the length, then the rest are the actual numbers, so 0x24 should be the length as the first thing loaded and the rest are the actual memory bits. Offset at 0x60 to save 0x00-0x60 for storing the sum, the current memory pointer for the next number, and the current number of numbers left to fetch
+        0x80 0x20 mstore // store the current location in memory to load for the next number
+        0x60 mload // the size of all the numbers
+        dup1 dup1 0x01 swap1 sub 0x40 mstore // duplicate the size, subtract 1 from it, then store it at 0x40
+        callvalue div
+        0x00 mstore // store the price to send to each address, which is the callvalue divided by the length
+        0x00 eq revertEmptyArray jumpi
+        sendEther jump
+
+    sendEther:
+        0x00 0x00 0x00 0x00 // no data to send in the call
+        0x00 mload // value to send fetched from 0x00 in memory
+        0x20 mload // load the current location in memory to load the next number from
+        dup1 0x20 add 0x20 mstore // duplicate that number, add 32 to it, and store it back to the slot for the next iteration
+        mload // load the value stored at the original memory location to get the address to send ether to
+        gas
+        call // call with all the arguments above to send the ether
+        0x00 0x40 mload // load the current size of numbers remaining in the array to test, and put a 0x00 before it to be the comparison to see if it's 0 or not
+        dup1 0x01 swap1 sub 0x40 mstore // duplicate the size, subtract 1 from it, then store it at 0x40
+        gt sendEther jumpi // if the size of elements is still greater than 0 then repeat
+        0x00 0x00 return // if the jumpi doesn't execute then return the sum as it is
+
+    revertEmptyArray:
+        0x00 0x00 revert
  }

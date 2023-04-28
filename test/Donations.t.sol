@@ -21,6 +21,7 @@ contract DonationsTest is Test {
         vm.deal(address(this), 1 ether);
         (bool success, ) = address(donations).call{value: 0.5 ether}("");
         require(success, "call failed");
+        console.log(address(this));
         assertEq(
             donations.donated(address(this)),
             0.5 ether,

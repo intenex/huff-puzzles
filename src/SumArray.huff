@@ -34,8 +34,8 @@
         mload // load the value at the current memory location
         add 0x00 mstore // adds the current value loaded to the current sum and then stores the result at 0x00
         0x00 // push zero on the stack to do the gt comparison later
-        0x40 mload
-        dup1 0x01 swap1 sub 0x40 mstore // duplicate teh size, subtract 1 from it, then store it at 0x40
+        0x40 mload // load the current size of numbers remaining in the array to test
+        dup1 0x01 swap1 sub 0x40 mstore // duplicate the size, subtract 1 from it, then store it at 0x40
         gt addNumber jumpi // if the size of elements is still greater than 0 then repeat
         0x20 0x00 return // if the jumpi doesn't execute then return the sum as is
 }

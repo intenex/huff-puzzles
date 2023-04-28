@@ -54,15 +54,9 @@ You should see something like this
 ## Suggested order for other exercises
 
 - [RevertString](https://github.com/rareskills/huff-puzzles/blob/main/src/RevertString.huff)
-- [Keccak](https://github.com/rareskills/huff-puzzles/blob/main/src/Keccak.huff)
-- [MaxOfArray](https://github.com/rareskills/huff-puzzles/blob/main/src/MaxOfArray.huff)
-- [Donations](https://github.com/rareskills/huff-puzzles/blob/main/src/Donations.huff)
-- [BasicBank](https://github.com/rareskills/huff-puzzles/blob/main/src/BasicBank.huff)
 - [SimulateArray](https://github.com/rareskills/huff-puzzles/blob/main/src/SimulateArray.huff)
 - [Emitter](https://github.com/rareskills/huff-puzzles/blob/main/src/Emitter.huff)
 - [Create](https://github.com/rareskills/huff-puzzles/blob/main/src/Create.huff)
-- [SendEther](https://github.com/rareskills/huff-puzzles/blob/main/src/SendEther.huff)
-- [Distribute](https://github.com/rareskills/huff-puzzles/blob/main/src/Distributor.huff)
 
 ## More resources
 

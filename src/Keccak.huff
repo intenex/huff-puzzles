@@ -9,5 +9,9 @@
 
 
  #define macro MAIN() = takes(0) returns(0) {
-    
+    calldatasize 0x00 0x00 calldatacopy // copy all all the calldata into memory
+    calldatasize 0x00 sha3
+    0x00 mstore // store the hash result at memory slot 0x00
+    0x20 0x00 return // return the hash
  }
+ 

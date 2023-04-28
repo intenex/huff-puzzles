@@ -12,5 +12,44 @@
 #define function withdraw(uint256) payable returns()
 
 #define macro MAIN() = takes(0) returns(0) {
+    0x00 calldataload 0xE0 shr // get the function selector
+    dup1 // so we have two function signatures available right
+    __FUNC_SIG(balanceOf) eq balanceOf jumpi
+    __FUNC_SIG(withdraw) eq withdraw jumpi
+    0x00 callvalue gt deposit jumpi
+    0x20 0x00 return
 
+    balanceOf:
+        0x04 calldataload // this should load the address into the stack
+        0x00 mstore // store the address in memory now
+        0x20 0x00 sha3 // get the address hash
+        sload 0x00 mstore // load the value at that address hash and store it in memory
+        0x20 0x00 return
+
+    withdraw:
+        0x04 calldataload // value to withdraw
+        caller 0x00 mstore // store the address in memory of the caller to retrieve their balance and check it
+        0x20 0x00 sha3 // get the address hash to load from
+        dup1 swap2 swap1 // duplicate the address hash on the stack and swap it to the top
+        sload // load the current balance and store it in memory
+        dup1 swap2 swap1 // duplicate the current balance so we can reference it later
+        lt revertNow jumpi
+        0x00 0x00 0x00 0x00 // offsets for arguments and return value, nothing to send so all good
+        0x04 calldataload // load the amount to withdraw to send
+        caller gas
+        call pop // pop off the 1 success return value
+        0x04 calldataload // load the amount we just withdrew again so we can sub it from the current balance
+        swap1 sub swap1 sstore // swap the values to subtract, then swap again to get the values for sstore in order to update the balance
+        0x00 0x00 return
+    
+    revertNow:
+        0x00 0x00 revert
+
+    deposit:
+        caller 0x00 mstore // store the address so we can hash it later for the storage location to store the counter at
+        0x20 0x00 sha3 // address hash that we can sstore on
+        dup1 sload // retrieves the existing value if any, returns 0 if nothing testNonMatchingSelector
+        callvalue add // add the existing value to the new value
+        swap1 sstore // store the new value at the key of the address hash, swap1 to get the arguments in order
+        0x00 0x00 return
 }
