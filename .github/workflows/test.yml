@@ -2,6 +2,13 @@ name: test
 
 on: workflow_dispatch
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   FOUNDRY_PROFILE: ci
 
@@ -12,6 +19,7 @@ jobs:
 
     name: Foundry project
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
         with:
